@@ -66,11 +66,14 @@ Complétez la méthode `NetworkGame::HostGame()` :
 ```cpp
 bool NetworkGame::HostGame()
 {
-    // À compléter :
-    // 1. Configurer le listener TCP sur NetworkPort
-    // 2. Ajouter le listener au sélecteur
-    // 3. Définir _isServer à true
-    return true;
+	// À compléter :
+	// 1. Configurer le listener TCP sur NetworkPort
+	_listener.listen(NetworkPort);
+	// 2. Ajouter le listener au sélecteur
+	_selector.add(_listener);
+	// 3. Définir _isServer à true
+	_isServer = true;
+	return true;
 }
 ```
 
