@@ -18,11 +18,19 @@ Complétez la méthode `NetworkDiscovery::Init()` pour :
 ```cpp
 bool NetworkDiscovery::Init()
 {
-    // À compléter :
-    // 1. Essayer de lier le socket au port NetworkPort
-    // 2. Si échec, essayer les ports suivants jusqu'à succès
-    // 3. Ajouter le socket au sélecteur
-    return true;
+	sf::Socket::Status status;
+	uint16_t port = NetworkPort;
+	// 1. Essayer de lier le socket au port NetworkPort
+	
+	// 2. Si échec, essayer les ports suivants jusqu'à succès
+	do {
+		status = _socket.bind(port);
+		port = port + 1
+	} while (status != sf::Socket::Done || port <= 60001);
+	
+	// 3. Ajouter le socket au sélecteur
+	_socketSelector.add(_socket);
+	return true;
 }
 ```
 
@@ -32,18 +40,22 @@ Complétez la méthode `NetworkDiscovery::Update()` pour implémenter le broadca
 ```cpp
 void NetworkDiscovery::Update()
 {
-    uint64_t nowMs = GetTimeMs();
+	uint64_t nowMs = GetTimeMs();
 
-    if(_isBroadcastEnabled)
-    {
-        // À compléter :
-        // 1. Vérifier si l'écart de temps entre maintenant et la dernière déclaration de temps est supérieure ou égale à DeclareGameServerDelayMs
-        // 2. Créer un paquet avec MagicPacket et _localServerName
-        // 3. Envoyer le paquet en broadcast
-    }
-
-    // Le reste du code est fourni...
-}
+	if(_isBroadcastEnabled)
+	{
+		// À compléter :
+		// 1. Vérifier si l'écart de temps entre maintenant et la dernière déclaration de temps est supérieure ou égale à DeclareGameServerDelayMs
+		if (nowMs - _lastDeclareGameServerTimeMs >= DeclareGameServerDelayMs)
+		{
+			// 2. Créer un paquet avec MagicPacket et _localServerName
+			 sf::Packet packet;
+			 packet << MagicPacket << _localServerName;
+			// 3. Envoyer le paquet en broadcast
+			 _socket.send(packet, sf::IpAddress::Broadcast);
+		}
+		
+	}
 ```
 
 ## Partie 2 : Connexion TCP
@@ -54,11 +66,14 @@ Complétez la méthode `NetworkGame::HostGame()` :
 ```cpp
 bool NetworkGame::HostGame()
 {
-    // À compléter :
-    // 1. Configurer le listener TCP sur NetworkPort
-    // 2. Ajouter le listener au sélecteur
-    // 3. Définir _isServer à true
-    return true;
+	// À compléter :
+	// 1. Configurer le listener TCP sur NetworkPort
+	_listener.listen(NetworkPort);
+	// 2. Ajouter le listener au sélecteur
+	_selector.add(_listener);
+	// 3. Définir _isServer à true
+	_isServer = true;
+	return true;
 }
 ```
 
