@@ -20,8 +20,11 @@ bool NetworkGame::HostGame()
 {
 	// À compléter :
 	// 1. Configurer le listener TCP sur NetworkPort
+	_listener.listen(NetworkPort);
 	// 2. Ajouter le listener au sélecteur
+	_selector.add(_listener);
 	// 3. Définir _isServer à true
+	_isServer = true;
 	return true;
 }
 
@@ -29,9 +32,13 @@ bool NetworkGame::WaitingAnOpponent()
 {
 	// À compléter :
 	// 1. Vérifier si une connexion est en attente avec le sélecteur
-	// 2. Accepter la connexion
-	// 3. Envoyer le nom du joueur local
-	// 4. Configurer la connexion
+	if ()
+	{
+		// 2. Accepter la connexion
+		// 3. Envoyer le nom du joueur local
+		// 4. Configurer la connexion
+	};
+	
 	return true;
 }
 
